@@ -1,7 +1,12 @@
-public class Subtask extends Task{
+package model;
 
-    Integer epicId;
-    Subtask(String name, Status status, String description) {
+import model.Task;
+
+public class Subtask extends Task {
+
+    private Integer epicId;
+
+    public Subtask(String name, Status status, String description) {
         super(name, status, description);
     }
 

@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Objects;
 
 public class Task {
@@ -6,10 +8,10 @@ public class Task {
     private String description;
     private Status status;
 
-    Task(String name, Status status,String description){
-        this.name=name;
-        this.status=status;
-        this.description=description;
+    public Task(String name, Status status, String description) {
+        this.name = name;
+        this.status = status;
+        this.description = description;
     }
 
     public int getId() {
@@ -55,5 +57,15 @@ public class Task {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
     }
 }
