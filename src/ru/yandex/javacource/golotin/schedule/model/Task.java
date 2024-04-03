@@ -1,4 +1,4 @@
-package model;
+package ru.yandex.javacource.golotin.schedule.model;
 
 import java.util.Objects;
 

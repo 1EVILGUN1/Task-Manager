@@ -1,9 +1,9 @@
-package service;
+package ru.yandex.javacource.golotin.schedule.service;
 
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
+import ru.yandex.javacource.golotin.schedule.model.Epic;
+import ru.yandex.javacource.golotin.schedule.model.Status;
+import ru.yandex.javacource.golotin.schedule.model.Subtask;
+import ru.yandex.javacource.golotin.schedule.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +11,9 @@ import java.util.HashMap;
 
 public class TaskManager {
     private int counterId = 0;
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
 
     public Task createTask(Task task) {
@@ -41,7 +41,7 @@ public class TaskManager {
         final int id = ++counterId;
         subtask.setId(id);
         subtasks.put(id, subtask);
-        epic.addSubtask(subtask);
+        epic.addSubtaskId(subtask.getId());
         updateEpicStatus(epicId);
         return subtask;
     }
@@ -116,20 +116,42 @@ public class TaskManager {
         if (epic == null) {
             return;
         }
-        epic.cleanSubtask();
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            subtasks.remove(subtaskId);
+        }
     }
 
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
+    public ArrayList<Subtask> getSubntasks() {
+        return new ArrayList<>(subtasks.values());
+    }
+
     public ArrayList<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
+    public ArrayList<Subtask> getEpicSubtasks(int epicId) {
+        Epic epic = epics.get(epicId);
+        ArrayList<Subtask> getSubtasks = null;
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            if (this.subtasks.containsKey(subtaskId)) {
+                getSubtasks.add(this.subtasks.get(subtaskId));
+            }
+        }
+        return getSubtasks;
+    }
+
     private void updateEpicStatus(int epicId) {
         Epic epic = epics.get(epicId);
-        ArrayList<Subtask> subtasks = epic.getSubtasks();
+        ArrayList<Subtask> subtasks = null;
+        for (Integer subtaskId : epic.getSubtaskIds()) {
+            if (this.subtasks.containsKey(subtaskId)) {
+                subtasks.add(this.subtasks.get(subtaskId));
+            }
+        }
         for (Subtask statusSubtask : subtasks) {
             short subtaskNew = 0;
             short subtaskDone = 0;

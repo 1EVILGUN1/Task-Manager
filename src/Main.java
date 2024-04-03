@@ -1,8 +1,8 @@
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
-import service.TaskManager;
+import ru.yandex.javacource.golotin.schedule.model.Epic;
+import ru.yandex.javacource.golotin.schedule.model.Status;
+import ru.yandex.javacource.golotin.schedule.model.Subtask;
+import ru.yandex.javacource.golotin.schedule.model.Task;
+import ru.yandex.javacource.golotin.schedule.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,8 +25,8 @@ public class Main {
         taskManager.updateSubtask(new Subtask("Сделать кофе", Status.DONE, "Кофе приготовлено"));
 
 
-        taskManager.getTasks();
-        taskManager.getEpics();
+        System.out.println(taskManager.getTasks());
+        System.out.println(taskManager.getEpics());
 
         taskManager.deleteTask(1);
         taskManager.deleteEpic(1);

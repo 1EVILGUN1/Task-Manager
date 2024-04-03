@@ -5,4 +5,4 @@ on:
 
 jobs:
   build:
-    uses: yandex-praktikum/java-kanban/.github/workflows/api-tests.yml@ci
+    uses: ru.yandex-praktikum/java-kanban/.github/workflows/api-tests.yml@ci
