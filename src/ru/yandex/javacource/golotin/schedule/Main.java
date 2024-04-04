@@ -1,3 +1,5 @@
+package ru.yandex.javacource.golotin.schedule;
+
 import ru.yandex.javacource.golotin.schedule.model.Epic;
 import ru.yandex.javacource.golotin.schedule.model.Status;
 import ru.yandex.javacource.golotin.schedule.model.Subtask;
