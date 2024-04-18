@@ -8,6 +8,7 @@ import ru.yandex.javacource.golotin.schedule.service.InMemoryTaskManager;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,7 +75,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         taskManager.createTask(task2);
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
         tasks.add(task);
         tasks.add(task2);
         assertEquals(tasks, taskManager.getTasks());

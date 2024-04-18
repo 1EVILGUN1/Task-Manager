@@ -7,14 +7,19 @@ import ru.yandex.javacource.golotin.schedule.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
+    //private final HistoryManager historyManager;
+    // this.historyManager = historyManager;
     private int counterId = 0;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final ArrayList<Object> history = new ArrayList<>(10);
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+
+    InMemoryHistoryManager history = new InMemoryHistoryManager();
+
 
     @Override
     public Task createTask(Task task) {
@@ -155,38 +160,33 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
-        checkArray(tasks.get(id));
+        history.add(tasks.get(id));
         return tasks.get(id);
 
     }
 
     @Override
     public Epic getEpic(int id) {
-        checkArray(epics.get(id));
+        history.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtask(int id) {
-        checkArray(subtasks.get(id));
+        history.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
-    @Override
-    public <T> ArrayList<T> getHistory() {
-        System.out.println(history.size());
-        return (ArrayList<T>) history;
-    }
 
-    public HashMap<Integer, Task> getTask() {
+    public Map<Integer, Task> getTask() {
         return tasks;
     }
 
-    public HashMap<Integer, Epic> getEpic() {
+    public Map<Integer, Epic> getEpic() {
         return epics;
     }
 
-    public HashMap<Integer, Subtask> getSubtask() {
+    public Map<Integer, Subtask> getSubtask() {
         return subtasks;
     }
 
@@ -222,13 +222,4 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private <T> void checkArray(T t) {
-        if (history.size() < 10) {
-
-            history.add(t);
-        } else {
-            history.remove(0);
-            history.add(t);
-        }
-    }
 }

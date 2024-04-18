@@ -5,6 +5,7 @@ import ru.yandex.javacource.golotin.schedule.model.Subtask;
 import ru.yandex.javacource.golotin.schedule.model.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     Task createTask(Task task);
@@ -31,11 +32,11 @@ public interface TaskManager {
 
     void deleteEpic(int id);
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<Subtask> getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubtasks(int epicId);
 
     Task getTask(int id);
 
@@ -43,6 +44,5 @@ public interface TaskManager {
 
     Subtask getSubtask(int id);
 
-    <T> ArrayList<T> getHistory();
 
 }
