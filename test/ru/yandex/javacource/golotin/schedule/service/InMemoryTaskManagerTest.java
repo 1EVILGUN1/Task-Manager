@@ -35,7 +35,7 @@ class InMemoryTaskManagerTest {
         Task clone = taskManager.getTask(result.getId());
         assertEquals(clone.getId(), result.getId());
         assertEquals(clone.getName(), result.getName());
-        assertTrue(taskManager.getTask().containsValue(task));
+        assertTrue(taskManager.getTasks().containsValue(task));
 
     }
 
@@ -65,7 +65,7 @@ class InMemoryTaskManagerTest {
         taskManager.createTask(task);
         taskManager.createTask(task2);
         taskManager.cleanTasks();
-        assertEquals(taskManager.getTask(), taskManager.getEpic());
+        assertEquals(taskManager.getTasks(), taskManager.getEpics());
     }
 
     @Test

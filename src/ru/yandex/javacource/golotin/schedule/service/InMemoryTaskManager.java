@@ -7,18 +7,17 @@ import ru.yandex.javacource.golotin.schedule.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class InMemoryTaskManager implements TaskManager {
-    //private final HistoryManager historyManager;
-    // this.historyManager = historyManager;
     private int counterId = 0;
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
 
-    InMemoryHistoryManager history = new InMemoryHistoryManager();
+    private final HistoryManager historyManager = Manager.getDefaultHistory();
 
 
     @Override
@@ -160,34 +159,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(int id) {
-        history.add(tasks.get(id));
-        return tasks.get(id);
+        final Task task = tasks.get(id);
+        historyManager.add(task);
+        return task;
 
     }
 
     @Override
     public Epic getEpic(int id) {
-        history.add(epics.get(id));
-        return epics.get(id);
+        final Epic epic = epics.get(id);
+        historyManager.add(epic);
+        return epic;
     }
 
     @Override
     public Subtask getSubtask(int id) {
-        history.add(subtasks.get(id));
-        return subtasks.get(id);
+        final Subtask subtask = subtasks.get(id);
+        historyManager.add(subtask);
+        return subtask;
     }
 
-
-    public Map<Integer, Task> getTask() {
-        return tasks;
-    }
-
-    public Map<Integer, Epic> getEpic() {
-        return epics;
-    }
-
-    public Map<Integer, Subtask> getSubtask() {
-        return subtasks;
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     private void updateEpicStatus(int epicId) {

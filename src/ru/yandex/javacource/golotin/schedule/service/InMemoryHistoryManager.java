@@ -7,21 +7,18 @@ import ru.yandex.javacource.golotin.schedule.model.Task;
 import ru.yandex.javacource.golotin.schedule.service.HistoryManager;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final int ARRAY_SIZE = 10;
-    List<Task> history = new ArrayList<>();
+    private static final int HISTOY_MAX_SIZE = 10;
+    private final List<Task> history = new ArrayList<>();
 
     @Override
     public void add(Task task) {
         if (task == null) {
             return;
         }
-        if (history.size() < ARRAY_SIZE) {
-
-            history.add(task);
-        } else {
+        if (history.size() >= HISTOY_MAX_SIZE) {
             history.remove(0);
-            history.add(task);
         }
+        history.add(task);
     }
 
     @Override
