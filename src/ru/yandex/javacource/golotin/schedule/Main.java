@@ -22,9 +22,9 @@ public class Main {
 
         taskManager.updateTask(new Task("Дом", Status.IN_PROGRESS, "Уборка в кухни и ванной"));
 
-        //  taskManager.updateEpic(new Epic("Прогулка", Status.NEW, "Не пойду гулять"));
-        // taskManager.updateSubtask(new Subtask("Уборка", Status.IN_PROGRESS, "Убираюсь)"));
-        //  taskManager.updateSubtask(new Subtask("Сделать кофе", Status.DONE, "Кофе приготовлено"));
+        taskManager.updateEpic(new Epic("Прогулка", Status.NEW, "Не пойду гулять"));
+        taskManager.updateSubtask(new Subtask("Уборка", Status.IN_PROGRESS, "Убираюсь)", 1));
+        taskManager.updateSubtask(new Subtask("Сделать кофе", Status.DONE, "Кофе приготовлено", 1));
 
 
         System.out.println(taskManager.getTasks());
