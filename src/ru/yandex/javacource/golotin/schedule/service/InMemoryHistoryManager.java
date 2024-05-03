@@ -8,6 +8,7 @@ import java.util.Map;
 import ru.yandex.javacource.golotin.schedule.model.Task;
 
 public class InMemoryHistoryManager implements HistoryManager {
+
     private static class Node {
         Task item;
         Node next;
@@ -20,15 +21,21 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    Map<Integer, Node> history = new HashMap<>();
-    Node first;
-    Node last;
+    private static final Map<Integer, Node> history = new HashMap<>();
+    private Node first;
+    private Node last;
 
     @Override
     public void add(Task task) {// добавление Task
-        Node node = history.get(task.getId());
-        removeNode(node);
-        linkLast(task);
+
+        if (task == null) {
+            return;
+        }else {
+            remove(task.getId());
+            linkLast(task);
+            history.put(task.getId(), last);
+
+        }
     }
 
     @Override
@@ -45,22 +52,40 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {// удаление по id
-        Node node = history.get(id);
+        final Node node = history.remove(id);
+        if (node == null) {
+            return;
+        }
         removeNode(node);
     }
 
-    private void removeNode(Node node) {// Удаление из связанного списка
-        history.remove(node.item.getId());
+    private void removeNode(Node node) {
+
+        if (node.prev != null) {
+            node.prev.next = node.next;
+            if (node.next == null) {
+                last = node.prev;
+            } else {
+                node.next.prev = node.prev;
+            }
+        } else {
+            first = node.next;
+            if (first == null) {
+                last = null;
+            } else {
+                first.prev = null;
+            }
+        }
     }
 
-    void linkLast(Task task) {// двигаем историю
-        final Node l = last;
-        final Node newNode = new Node(l, task, null);
+    private void linkLast(Task task) {// двигаем историю
+        final Node lastLink = last;
+        final Node newNode = new Node(lastLink, task, null);
         last = newNode;
-        if (l == null) {
+        if (lastLink == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            lastLink.next = newNode;
         }
     }
 }
