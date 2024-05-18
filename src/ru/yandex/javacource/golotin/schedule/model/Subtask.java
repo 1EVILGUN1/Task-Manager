@@ -10,9 +10,13 @@ public class Subtask extends Task {
         setEpicId(epicId);
     }
 
+    @Override
     public Integer getEpicId() {
         return epicId;
     }
+
+    @Override
+    public TaskType getType() {return TaskType.SUBTASK;}
 
     public void setEpicId(Integer epicId) {
         this.epicId = epicId;
@@ -20,8 +24,6 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                "epicId=" + epicId +
-                '}';
+        return STR."Subtask{epicId=\{epicId}\{'}'}";
     }
 }

@@ -4,12 +4,13 @@ import ru.yandex.javacource.golotin.schedule.model.Epic;
 import ru.yandex.javacource.golotin.schedule.model.Status;
 import ru.yandex.javacource.golotin.schedule.model.Subtask;
 import ru.yandex.javacource.golotin.schedule.model.Task;
-import ru.yandex.javacource.golotin.schedule.service.InMemoryTaskManager;
+
+import ru.yandex.javacource.golotin.schedule.service.Manager;
 import ru.yandex.javacource.golotin.schedule.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new InMemoryTaskManager();
+        TaskManager taskManager = Manager.getDefaults();
         taskManager.createTask(new Task("Дом", Status.NEW, "Убраться в кухни и ванной"));
         taskManager.createTask(new Task("Работа", Status.IN_PROGRESS, "Сделать куча рутины и пойти домой:)"));
 

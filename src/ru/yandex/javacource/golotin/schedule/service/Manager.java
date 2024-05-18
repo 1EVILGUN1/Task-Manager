@@ -2,7 +2,7 @@ package ru.yandex.javacource.golotin.schedule.service;
 
 public class Manager {
     public static TaskManager getDefaults() {
-        return new InMemoryTaskManager();
+        return new InMemoryTaskManager(getDefaultHistory());
     }
 
     public static InMemoryHistoryManager getDefaultHistory() {

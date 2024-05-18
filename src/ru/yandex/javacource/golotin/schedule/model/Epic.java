@@ -1,10 +1,11 @@
 package ru.yandex.javacource.golotin.schedule.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
 
-    private final ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private final List<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(String name, Status status, String description) {
         super(name, status, description);
@@ -23,15 +24,15 @@ public class Epic extends Task {
         subtaskIds.remove(id);
     }
 
-    public ArrayList<Integer> getSubtaskIds() {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
+    public TaskType getType() {return TaskType.EPIC;}
+
     @Override
     public String toString() {
-        return "Epic{" +
-                "subtaskIds=" + subtaskIds +
-                '}';
+        return STR."Epic{subtaskIds=\{subtaskIds}\{'}'}";
     }
 
 }

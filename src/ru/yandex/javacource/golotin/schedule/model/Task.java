@@ -26,6 +26,8 @@ public class Task {
         return name;
     }
 
+    public Integer getEpicId() {return null;}
+
     public void setName(String name) {
         this.name = name;
     }
@@ -33,6 +35,8 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
+    public TaskType getType() {return TaskType.TASK;}
 
     public void setDescription(String description) {
         this.description = description;
@@ -61,11 +65,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                '}';
+        return STR."Task{id=\{id}, name='\{name}\{'\''}, description='\{description}\{'\''}, status=\{status}\{'}'}";
     }
 }
