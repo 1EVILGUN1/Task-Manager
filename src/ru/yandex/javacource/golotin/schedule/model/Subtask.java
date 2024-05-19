@@ -9,7 +9,11 @@ public class Subtask extends Task {
         super(name, status, description);
         setEpicId(epicId);
     }
-
+    public Subtask(int id,String name,String description,Status status,Integer epicId){
+        super(name, status, description);
+        setId(id);
+        setEpicId(epicId);
+    }
     @Override
     public Integer getEpicId() {
         return epicId;
