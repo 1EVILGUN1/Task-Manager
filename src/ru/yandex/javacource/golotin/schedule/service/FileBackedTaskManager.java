@@ -60,7 +60,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             taskManager.counterId = generatorId;
         } catch (IOException e) {
-            throw new ManagerSaveException(STR."Невозможно прочитать файл: \{file.getName()}", e);
+            throw new ManagerSaveException("Невозможно прочитать файл: " + file.getName(), e);
         }
         return taskManager;
     }
@@ -123,7 +123,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static String toString(Task task) {
-        return STR."\{task.getId()},\{task.getType()},\{task.getName()},\{task.getStatus()},\{task.getDescription()},\{task.getType().equals(TaskType.SUBTASK) ? task.getEpicId() : ""}";
+        return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," +
+                task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? task.getEpicId() : "");
     }
 
 
@@ -152,19 +153,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(toString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, Subtask> entry : subtasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(toString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(CSVTaskFormat.toString(task));
+                writer.write(toString(task));
                 writer.newLine();
             }
 
@@ -172,40 +173,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка сохранения файла: " + file.getName(), e);
         }
-    }
-
-    private void loadFromFile() {// Чтение из в файла
-        int maxId = 0;
-        try (final BufferedReader reader = new BufferedReader(new FileReader(file, UTF_8))) {
-            reader.readLine(); // Пропускаем заголовок
-            while (true) {
-                String line = reader.readLine();
-                final Task task = taskFromString(line);
-                final int id = task.getId();
-                if (task.getType() == TaskType.TASK) {// Задача
-                    tasks.put(id, task);
-                } else if (task.getType() == TaskType.SUBTASK) {// Подзадачи
-                    subtasks.put(id, new Subtask(task.getId(), task.getName(), task.getDescription(), task.getStatus(),
-                            task.getEpicId()));
-                } else if (task.getType() == TaskType.EPIC) {// Эпики
-                    epics.put(id, new Epic(task.getId(), task.getName(), task.getDescription(), task.getStatus()));
-                    for (Subtask subtask : subtasks.values()) {// Поиск подзадач эпика
-                        if (subtask.getEpicId() == task.getId()) {
-                            Epic epic = epics.get(task.getId());
-                            epic.addSubtaskId(subtask.getId());
-                        }
-                    }
-                }
-                if (maxId < id) {
-                    maxId = id;
-                }
-                if (line.isEmpty()) {
-                    break;
-                }
-            }
-        } catch (IOException e) {// Отлавливаем ошибки
-            throw new ManagerSaveException(STR."Ошибка при чтении файла: \{file.getAbsolutePath()}", e);
-        }
-        counterId = maxId;// генератор
     }
 }

@@ -14,7 +14,7 @@ public class Task {
         this.description = description;
     }
 
-    public Task(int id,String name,String description,Status status){
+    public Task(int id, String name, String description, Status status) {
         setId(id);
         this.name = name;
         this.status = status;
@@ -33,7 +33,9 @@ public class Task {
         return name;
     }
 
-    public Integer getEpicId() {return null;}
+    public Integer getEpicId() {
+        return null;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -43,7 +45,9 @@ public class Task {
         return description;
     }
 
-    public TaskType getType() {return TaskType.TASK;}
+    public TaskType getType() {
+        return TaskType.TASK;
+    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -72,6 +76,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return STR."Task{id=\{id}, name='\{name}\{'\''}, description='\{description}\{'\''}, status=\{status}\{'}'}";
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
     }
 }
