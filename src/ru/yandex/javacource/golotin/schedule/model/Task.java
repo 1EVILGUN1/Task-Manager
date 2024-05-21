@@ -14,6 +14,13 @@ public class Task {
         this.description = description;
     }
 
+    public Task(int id, String name, String description, Status status) {
+        setId(id);
+        this.name = name;
+        this.status = status;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }
@@ -26,12 +33,20 @@ public class Task {
         return name;
     }
 
+    public Integer getEpicId() {
+        return null;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public void setDescription(String description) {

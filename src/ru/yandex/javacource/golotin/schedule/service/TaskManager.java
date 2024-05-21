@@ -4,13 +4,12 @@ import ru.yandex.javacource.golotin.schedule.model.Epic;
 import ru.yandex.javacource.golotin.schedule.model.Subtask;
 import ru.yandex.javacource.golotin.schedule.model.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
     Task createTask(Task task);
 
-    Epic createEpic(Epic epic);
+    Task createEpic(Epic epic);
 
     Subtask createSubtask(Subtask subtask);
 

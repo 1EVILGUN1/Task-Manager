@@ -1,5 +1,6 @@
 package ru.yandex.javacource.golotin.schedule.service;
 
+import ru.yandex.javacource.golotin.schedule.exception.NotFoundException;
 import ru.yandex.javacource.golotin.schedule.model.Epic;
 import ru.yandex.javacource.golotin.schedule.model.Status;
 import ru.yandex.javacource.golotin.schedule.model.Subtask;
@@ -13,10 +14,18 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int counterId = 0;
-    final Map<Integer, Task> tasks = new HashMap<>();
-    final Map<Integer, Epic> epics = new HashMap<>();
-    final Map<Integer, Subtask> subtasks = new HashMap<>();
-    final HistoryManager historyManager = Manager.getDefaultHistory();
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, Subtask> subtasks;
+    protected final HistoryManager historyManager;
+
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager; // 3
+        this.tasks = new HashMap<>();
+        this.epics = new HashMap<>();
+        this.subtasks = new HashMap<>();
+    }
 
     @Override
     public Task createTask(Task task) {// создание Task
@@ -134,17 +143,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }// получаем список Tasks
 
     @Override
-    public ArrayList<Epic> getEpics() {
+    public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }// получаем список Epics
 
     @Override
-    public ArrayList<Subtask> getEpicSubtasks(int epicId) {// получаем список Epic с Subtasks
+    public List<Subtask> getEpicSubtasks(int epicId) {// получаем список Epic с Subtasks
         Epic epic = epics.get(epicId);
         ArrayList<Subtask> getSubtasks = null;
         for (Integer subtaskId : epic.getSubtaskIds()) {
@@ -158,6 +167,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) {// получаем Task по id
         final Task task = tasks.get(id);
+        if (task == null) {
+            throw new NotFoundException("Задача с ид=" + id);
+        }
         historyManager.add(task);
         return task;
 
@@ -166,6 +178,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) {// получаем Epic по id
         final Epic epic = epics.get(id);
+        if (epic == null) {
+            throw new NotFoundException("Эпик с ид=" + id);
+        }
         historyManager.add(epic);
         return epic;
     }
@@ -173,6 +188,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) {// получаем Subtask по id
         final Subtask subtask = subtasks.get(id);
+        if (subtask == null) {
+            throw new NotFoundException("Подзадача с ид=" + id);
+        }
         historyManager.add(subtask);
         return subtask;
     }
