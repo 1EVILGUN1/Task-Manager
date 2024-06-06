@@ -74,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {// обновление Epic
-       final Epic savedEpic = epics.get(epic.getId());
+        final Epic savedEpic = epics.get(epic.getId());
         if (savedEpic == null) {
             return;
         }
@@ -241,14 +241,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void addPriorityTask(Task task) {
-        for(Task t : prioritizedTasks){
-            if(t.getStartTime()==task.getStartTime()){
-                throw new ManagerSaveException("Пересечение с задачей "+ task.toString());
+        for (Task t : prioritizedTasks) {
+            if (t.getStartTime() == task.getStartTime()) {
+                throw new ManagerSaveException("Пересечение с задачей " + task.toString());
             }
         }
         prioritizedTasks.add(task);
     }
-    public List<Task> getPrioritizedTasks(){
-            return new ArrayList<>(prioritizedTasks);
+
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
     }
 }

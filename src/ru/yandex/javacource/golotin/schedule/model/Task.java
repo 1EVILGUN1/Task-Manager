@@ -24,7 +24,7 @@ public class Task {
         this.endTime = startTime.plus(duration, ChronoUnit.MINUTES);
     }
 
-    public Task(int id, String name, String description, Status status,Instant startTime, int duration) {
+    public Task(int id, String name, String description, Status status, Instant startTime, int duration) {
         setId(id);
         this.name = name;
         this.status = status;
@@ -74,17 +74,29 @@ public class Task {
         this.status = status;
     }
 
-    public Instant getStartTime() {return startTime;}
+    public Instant getStartTime() {
+        return startTime;
+    }
 
-    public void setStartTime(Instant startTime) {this.startTime = startTime;}
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
 
-    public Duration getDuration() {return duration;}
+    public Duration getDuration() {
+        return duration;
+    }
 
-    public void setDuration(int duration) {this.duration = Duration.ofMinutes(duration);}
+    public void setDuration(int duration) {
+        this.duration = Duration.ofMinutes(duration);
+    }
 
-    public Instant getEndTime() {return endTime;}
+    public Instant getEndTime() {
+        return endTime;
+    }
 
-    public void setEndTime(Instant endTime) {this.endTime = endTime;}
+    public void setEndTime(Instant endTime) {
+        this.endTime = endTime;
+    }
 
     @Override
     public boolean equals(Object o) {

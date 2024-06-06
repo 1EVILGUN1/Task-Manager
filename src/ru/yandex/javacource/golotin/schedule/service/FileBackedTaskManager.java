@@ -43,10 +43,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     taskManager.createTask(task);
                 } else if (task.getType() == TaskType.SUBTASK) {
                     taskManager.createSubtask(new Subtask(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus(),task.getStartTime(),task.getDuration().toMinutesPart(), task.getEpicId()));
+                            task.getStatus(), task.getStartTime(), task.getDuration().toMinutesPart(), task.getEpicId()));
                 } else if (task.getType() == TaskType.EPIC) {
                     taskManager.createEpic(new Epic(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus(),task.getStartTime(),task.getDuration().toMinutesPart()));
+                            task.getStatus(), task.getStartTime(), task.getDuration().toMinutesPart()));
                     for (Subtask subtask : taskManager.subtasks.values()) {// Поиск подзадач эпика
                         if (subtask.getEpicId() == task.getId()) {
                             Epic epic = taskManager.epics.get(task.getId());
