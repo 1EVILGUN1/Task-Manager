@@ -1,6 +1,9 @@
 package ru.yandex.javacource.golotin.schedule.model;
 
+import java.time.Duration;
 import java.util.Objects;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class Task {
     private int id;
@@ -8,17 +11,27 @@ public class Task {
     private String description;
     private Status status;
 
-    public Task(String name, Status status, String description) {
+    private Instant startTime; // LocalDateTime
+    private Duration duration; // минуты или Duration
+    private Instant endTime;
+
+    public Task(String name, Status status, String description, Instant startTime, int duration) {
         this.name = name;
         this.status = status;
         this.description = description;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(duration);
+        this.endTime = startTime.plus(duration, ChronoUnit.MINUTES);
     }
 
-    public Task(int id, String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status,Instant startTime, int duration) {
         setId(id);
         this.name = name;
         this.status = status;
         this.description = description;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(duration);
+        this.endTime = startTime.plus(duration, ChronoUnit.MINUTES);
     }
 
     public int getId() {
@@ -61,6 +74,18 @@ public class Task {
         this.status = status;
     }
 
+    public Instant getStartTime() {return startTime;}
+
+    public void setStartTime(Instant startTime) {this.startTime = startTime;}
+
+    public Duration getDuration() {return duration;}
+
+    public void setDuration(int duration) {this.duration = Duration.ofMinutes(duration);}
+
+    public Instant getEndTime() {return endTime;}
+
+    public void setEndTime(Instant endTime) {this.endTime = endTime;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,4 +108,6 @@ public class Task {
                 ", status=" + status +
                 '}';
     }
+
+
 }

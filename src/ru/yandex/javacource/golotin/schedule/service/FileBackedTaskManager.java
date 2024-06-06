@@ -6,6 +6,8 @@ import java.io.*;
 
 import java.nio.file.Files;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 import ru.yandex.javacource.golotin.schedule.exception.ManagerSaveException;
@@ -41,10 +43,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     taskManager.createTask(task);
                 } else if (task.getType() == TaskType.SUBTASK) {
                     taskManager.createSubtask(new Subtask(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus(), task.getEpicId()));
+                            task.getStatus(),task.getStartTime(),task.getDuration().toMinutesPart(), task.getEpicId()));
                 } else if (task.getType() == TaskType.EPIC) {
                     taskManager.createEpic(new Epic(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus()));
+                            task.getStatus(),task.getStartTime(),task.getDuration().toMinutesPart()));
                     for (Subtask subtask : taskManager.subtasks.values()) {// Поиск подзадач эпика
                         if (subtask.getEpicId() == task.getId()) {
                             Epic epic = taskManager.epics.get(task.getId());
@@ -135,15 +137,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
+        final Instant startTime = Instant.parse(values[5]);
+        final Duration duration = Duration.parse(values[6]);
         if (type == TaskType.TASK) {
-            return new Task(id, name, description, status);
+            return new Task(id, name, description, status, startTime, duration.toMinutesPart());
         }
         if (type == TaskType.SUBTASK) {
             final int epicId = Integer.parseInt(values[5]);
-            return new Subtask(id, name, description, status, epicId);
+            return new Subtask(id, name, description, status, startTime, duration.toMinutesPart(), epicId);
         }
 
-        return new Epic(id, name, description, status);
+        return new Epic(id, name, description, status, startTime, duration.toMinutesPart());
     }
 
     protected void saveToFile() {

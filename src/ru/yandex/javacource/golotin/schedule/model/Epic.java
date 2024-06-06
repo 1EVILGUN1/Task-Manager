@@ -1,5 +1,7 @@
 package ru.yandex.javacource.golotin.schedule.model;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +9,12 @@ public class Epic extends Task {
 
     private final List<Integer> subtaskIds = new ArrayList<>();
 
-    public Epic(String name, Status status, String description) {
-        super(name, status, description);
+    public Epic(String name, Status status, String description, Instant startTime, int duration) {
+        super(name, status, description, startTime, duration);
     }
 
-    public Epic(int id, String name, String description, Status status) {
-        super(name, status, description);
+    public Epic(int id, String name, String description, Status status, Instant startTime, int duration) {
+        super(name, status, description,startTime, duration);
         setId(id);
     }
 
@@ -34,6 +36,10 @@ public class Epic extends Task {
 
     public TaskType getType() {
         return TaskType.EPIC;
+    }
+
+    public void setSumDurationSubtasks(Duration duration) {
+        setDuration(getDuration().plus(duration).toMinutesPart());
     }
 
     @Override
