@@ -2,18 +2,20 @@ package ru.yandex.javacource.golotin.schedule.model;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
 
     private final List<Integer> subtaskIds = new ArrayList<>();
+    private LocalDateTime endTime;
 
-    public Epic(String name, Status status, String description, Instant startTime, int duration) {
+    public Epic(String name, Status status, String description, LocalDateTime startTime, long duration) {
         super(name, status, description, startTime, duration);
     }
 
-    public Epic(int id, String name, String description, Status status, Instant startTime, int duration) {
+    public Epic(int id, String name, String description, Status status, LocalDateTime startTime, long duration) {
         super(name, status, description, startTime, duration);
         setId(id);
     }
@@ -38,15 +40,15 @@ public class Epic extends Task {
         return TaskType.EPIC;
     }
 
-    public void setSumDurationSubtasks(Duration duration) {
-        setDuration(getDuration().plus(duration).toMinutesPart());
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     @Override
     public String toString() {
         return "Epic{" +
                 "subtaskIds=" + subtaskIds +
+                ", endTime=" + endTime +
                 '}';
     }
-
 }

@@ -1,9 +1,9 @@
 package ru.yandex.javacource.golotin.schedule.model;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 public class Task {
     private int id;
@@ -11,27 +11,24 @@ public class Task {
     private String description;
     private Status status;
 
-    private Instant startTime; // LocalDateTime
+    private LocalDateTime startTime; // LocalDateTime
     private Duration duration; // минуты или Duration
-    private Instant endTime;
 
-    public Task(String name, Status status, String description, Instant startTime, int duration) {
+    public Task(String name, Status status, String description, LocalDateTime startTime, long duration) {
         this.name = name;
         this.status = status;
         this.description = description;
-        this.startTime = startTime;
+        this.startTime = LocalDateTime.from(startTime);
         this.duration = Duration.ofMinutes(duration);
-        this.endTime = startTime.plus(duration, ChronoUnit.MINUTES);
     }
 
-    public Task(int id, String name, String description, Status status, Instant startTime, int duration) {
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, long duration) {
         setId(id);
         this.name = name;
         this.status = status;
         this.description = description;
         this.startTime = startTime;
         this.duration = Duration.ofMinutes(duration);
-        this.endTime = startTime.plus(duration, ChronoUnit.MINUTES);
     }
 
     public int getId() {
@@ -74,42 +71,26 @@ public class Task {
         this.status = status;
     }
 
-    public Instant getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Instant startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Duration getDuration() {
-        return duration;
+    public long getDuration() {
+        return duration.toMinutesPart();
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = Duration.ofMinutes(duration);
     }
 
-    public Instant getEndTime() {
-        return endTime;
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
-    public void setEndTime(Instant endTime) {
-        this.endTime = endTime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return id == task.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 
     @Override
     public String toString() {
@@ -118,8 +99,21 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
+                ", startTime=" + startTime +
+                ", endTime=" + getEndTime() +
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status && Objects.equals(startTime, task.startTime) && Objects.equals(duration, task.duration);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status, startTime, duration);
+    }
 }

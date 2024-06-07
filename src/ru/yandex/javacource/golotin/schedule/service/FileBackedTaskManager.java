@@ -8,6 +8,7 @@ import java.nio.file.Files;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import ru.yandex.javacource.golotin.schedule.exception.ManagerSaveException;
@@ -43,10 +44,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     taskManager.createTask(task);
                 } else if (task.getType() == TaskType.SUBTASK) {
                     taskManager.createSubtask(new Subtask(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus(), task.getStartTime(), task.getDuration().toMinutesPart(), task.getEpicId()));
+                            task.getStatus(), task.getStartTime(), task.getDuration(), task.getEpicId()));
                 } else if (task.getType() == TaskType.EPIC) {
                     taskManager.createEpic(new Epic(task.getId(), task.getName(), task.getDescription(),
-                            task.getStatus(), task.getStartTime(), task.getDuration().toMinutesPart()));
+                            task.getStatus(), task.getStartTime(), task.getDuration()));
                     for (Subtask subtask : taskManager.subtasks.values()) {// Поиск подзадач эпика
                         if (subtask.getEpicId() == task.getId()) {
                             Epic epic = taskManager.epics.get(task.getId());
@@ -126,7 +127,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static String toString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," +
-                task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? task.getEpicId() : "");
+                task.getDescription() + "," + (task.getType().equals(TaskType.SUBTASK) ? task.getEpicId() : ""+task.getStartTime()+","+task.getEndTime());
     }
 
 
@@ -137,8 +138,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
-        final Instant startTime = Instant.parse(values[5]);
-        final Duration duration = Duration.parse(values[6]);
+        final LocalDateTime startTime = LocalDateTime.parse(values[5]);
+        final Duration duration = Duration.between(LocalDateTime.parse(values[5]), LocalDateTime.parse(values[6]));
         if (type == TaskType.TASK) {
             return new Task(id, name, description, status, startTime, duration.toMinutesPart());
         }

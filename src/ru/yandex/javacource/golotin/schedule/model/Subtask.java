@@ -1,18 +1,19 @@
 package ru.yandex.javacource.golotin.schedule.model;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class Subtask extends Task {
 
     private Integer epicId;
 
-    public Subtask(String name, Status status, String description, Instant startTime, int duration, int epicId) {
+    public Subtask(String name, Status status, String description, LocalDateTime startTime, long duration, int epicId) {
 
         super(name, status, description, startTime, duration);
         setEpicId(epicId);
     }
 
-    public Subtask(int id, String name, String description, Status status, Instant startTime, int duration, Integer epicId) {
+    public Subtask(int id, String name, String description, Status status, LocalDateTime startTime, long duration, Integer epicId) {
         super(name, status, description, startTime, duration);
         setId(id);
         setEpicId(epicId);
