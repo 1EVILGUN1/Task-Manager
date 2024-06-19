@@ -161,7 +161,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Subtask> getEpicSubtasks(int epicId) {// получаем список Epic с Subtasks
-        Epic epic = epics.get(epicId);
+        final Epic epic = epics.get(epicId);
+        if (epic == null) {
+            throw new NotFoundException("Задача с ид=" + epicId);
+        }
         updateEpic(epicId);
         return epic.getSubtaskIds().stream().map(subtasks::get).collect(Collectors.toList());
     }
@@ -283,6 +286,7 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.add(task);
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
     }
