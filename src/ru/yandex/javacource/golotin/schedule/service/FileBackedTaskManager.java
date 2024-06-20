@@ -144,7 +144,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             return new Task(id, name, description, status, startTime, duration.toMinutesPart());
         }
         if (type == TaskType.SUBTASK) {
-            final int epicId = Integer.parseInt(values[5]);
+            final int epicId = Integer.parseInt(values[7]);
             return new Subtask(id, name, description, status, startTime, duration.toMinutesPart(), epicId);
         }
 
