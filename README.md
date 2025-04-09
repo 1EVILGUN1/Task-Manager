@@ -55,7 +55,7 @@
 
 ### Инструкция
 1. **Склонируйте репозиторий:**  
-   git clone https://github.com/your-username/java-task-manager.git
+   git clone https://github.com/1EVILGUN1/java-task-manager.git
 2. **Перейдите в папку проекта:**  
    cd java-task-manager
 3. **Запустите приложение:**
