@@ -1,4 +1,4 @@
-package task.manager.schedule.model;
+package service.task.manager.model.enums;
 
 public enum TaskType {
     TASK,

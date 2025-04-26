@@ -11,7 +11,6 @@ import java.util.Map;
 import task.manager.schedule.exception.ManagerSaveException;
 import ru.yandex.javacource.golotin.schedule.model.*;
 import task.manager.schedule.service.inMemory.InMemoryTaskManager;
-import task.manager.schedule.model.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
