@@ -7,7 +7,9 @@ import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 import service.task.manager.dto.epic.EpicRequestCreatedDto;
+import service.task.manager.dto.epic.EpicRequestUpdatedDto;
 import service.task.manager.dto.epic.EpicResponseDto;
+import service.task.manager.dto.subtask.SubtaskRequestUpdatedDto;
 import service.task.manager.model.Epic;
 import service.task.manager.model.Subtask;
 import service.task.manager.model.enums.Status;
@@ -15,7 +17,7 @@ import service.task.manager.model.enums.TaskType;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-26T20:14:42+0300",
+    date = "2025-04-26T20:47:41+0300",
     comments = "version: 1.6.0, compiler: javac, environment: Java 21.0.2 (Eclipse Adoptium)"
 )
 @Component
@@ -87,6 +89,86 @@ public class EpicMapperImpl implements EpicMapper {
         EpicResponseDto.SubtaskDto subtaskDto = new EpicResponseDto.SubtaskDto( id, name, description, status );
 
         return subtaskDto;
+    }
+
+    @Override
+    public Subtask toEntity(SubtaskRequestUpdatedDto subtaskRequestUpdatedDto) {
+        if ( subtaskRequestUpdatedDto == null ) {
+            return null;
+        }
+
+        Subtask subtask = new Subtask();
+
+        subtask.setId( subtaskRequestUpdatedDto.id() );
+        subtask.setName( subtaskRequestUpdatedDto.name() );
+        subtask.setDescription( subtaskRequestUpdatedDto.description() );
+        subtask.setStatus( subtaskRequestUpdatedDto.status() );
+        subtask.setDuration( subtaskRequestUpdatedDto.duration() );
+
+        return subtask;
+    }
+
+    @Override
+    public SubtaskRequestUpdatedDto toSubtaskRequestUpdatedDto(Subtask subtask) {
+        if ( subtask == null ) {
+            return null;
+        }
+
+        Long id = null;
+        String name = null;
+        String description = null;
+        Status status = null;
+        Duration duration = null;
+
+        id = subtask.getId();
+        name = subtask.getName();
+        description = subtask.getDescription();
+        status = subtask.getStatus();
+        duration = subtask.getDuration();
+
+        SubtaskRequestUpdatedDto subtaskRequestUpdatedDto = new SubtaskRequestUpdatedDto( id, name, description, status, duration );
+
+        return subtaskRequestUpdatedDto;
+    }
+
+    @Override
+    public Epic toEntity(EpicRequestUpdatedDto epicRequestUpdatedDto) {
+        if ( epicRequestUpdatedDto == null ) {
+            return null;
+        }
+
+        Epic epic = new Epic();
+
+        epic.setId( epicRequestUpdatedDto.id() );
+        epic.setName( epicRequestUpdatedDto.name() );
+        epic.setDescription( epicRequestUpdatedDto.description() );
+        epic.setStatus( epicRequestUpdatedDto.status() );
+        epic.setDuration( epicRequestUpdatedDto.duration() );
+
+        return epic;
+    }
+
+    @Override
+    public EpicRequestUpdatedDto toEpicDto(Epic epic) {
+        if ( epic == null ) {
+            return null;
+        }
+
+        Long id = null;
+        String name = null;
+        String description = null;
+        Status status = null;
+        Duration duration = null;
+
+        id = epic.getId();
+        name = epic.getName();
+        description = epic.getDescription();
+        status = epic.getStatus();
+        duration = epic.getDuration();
+
+        EpicRequestUpdatedDto epicRequestUpdatedDto = new EpicRequestUpdatedDto( id, name, description, status, duration );
+
+        return epicRequestUpdatedDto;
     }
 
     protected List<EpicResponseDto.SubtaskDto> subtaskListToSubtaskDtoList(List<Subtask> list) {

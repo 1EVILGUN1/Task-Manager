@@ -1,9 +1,9 @@
 package service.task.manager.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import service.task.manager.model.Subtask;
 
 @Repository
-public interface SubtaskRepository extends CrudRepository<Subtask, Long> {
+public interface SubtaskRepository extends JpaRepository<Subtask, Long> {
 }

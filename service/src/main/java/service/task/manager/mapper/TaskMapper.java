@@ -1,9 +1,7 @@
 package service.task.manager.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import service.task.manager.dto.task.TaskRequestUpdatedDto;
 import service.task.manager.dto.task.TaskRequestCreatedDto;
 import service.task.manager.dto.task.TaskResponseDto;
 import service.task.manager.model.Task;
@@ -16,4 +14,8 @@ public interface TaskMapper {
 
     // Маппинг из сущности Task в DTO ответа
     TaskResponseDto toResponseDto(Task task);
+
+    Task toEntity(TaskRequestUpdatedDto taskRequestUpdatedDto);
+
+    TaskRequestUpdatedDto toTaskRequestUpdatedDto(Task task);
 }

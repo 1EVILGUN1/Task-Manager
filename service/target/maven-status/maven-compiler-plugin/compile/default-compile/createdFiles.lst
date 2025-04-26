@@ -17,10 +17,13 @@ service/task/manager/service/impl/SubtaskServiceImpl.class
 service/task/manager/mapper/SubtaskMapper.class
 service/task/manager/repository/EpicRepository.class
 service/task/manager/repository/TaskRepository.class
+service/task/manager/dto/epic/EpicRequestUpdatedDto.class
+service/task/manager/dto/task/TaskRequestUpdatedDto.class
 service/task/manager/error/TaskConstraintViolationException.class
 service/task/manager/dto/epic/EpicRequestCreatedDto.class
 service/task/manager/dto/task/TaskResponseDto.class
 service/task/manager/service/SubtaskService.class
+service/task/manager/dto/subtask/SubtaskRequestUpdatedDto.class
 service/task/manager/controller/TaskController.class
 service/task/manager/service/impl/EpicServiceImpl.class
 service/task/manager/controller/EpicController.class

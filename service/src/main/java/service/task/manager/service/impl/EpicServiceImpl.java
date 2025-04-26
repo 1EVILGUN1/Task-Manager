@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import service.task.manager.dto.epic.EpicRequestCreatedDto;
+import service.task.manager.dto.epic.EpicRequestUpdatedDto;
 import service.task.manager.dto.epic.EpicResponseDto;
+import service.task.manager.error.NotFoundException;
 import service.task.manager.mapper.EpicMapper;
+import service.task.manager.model.Epic;
 import service.task.manager.repository.EpicRepository;
 import service.task.manager.service.EpicService;
 
@@ -24,7 +27,18 @@ public class EpicServiceImpl implements EpicService {
      */
     @Override
     public void create(EpicRequestCreatedDto dto) {
+        repository.save(mapper.toEntity(dto));
+    }
 
+    /**
+     * @param dto
+     * @return
+     */
+    @Override
+    public EpicResponseDto update(EpicRequestUpdatedDto dto) {
+        Epic epic = mapper.toEntity(dto);
+        epic = repository.save(epic);
+        return mapper.toResponseDto(epic);
     }
 
     /**
@@ -33,7 +47,11 @@ public class EpicServiceImpl implements EpicService {
      */
     @Override
     public EpicResponseDto findById(Long id) {
-        return null;
+        return repository.findById(id).
+                stream()
+                .map(mapper::toResponseDto)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Epic not found"));
     }
 
     /**
@@ -41,6 +59,16 @@ public class EpicServiceImpl implements EpicService {
      */
     @Override
     public List<EpicResponseDto> findAll() {
-        return List.of();
+        return repository.findAll()
+                .stream().map(mapper::toResponseDto)
+                .toList();
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

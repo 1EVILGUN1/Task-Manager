@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import service.task.manager.dto.subtask.SubtaskRequestCreatedDto;
+import service.task.manager.dto.subtask.SubtaskRequestUpdatedDto;
 import service.task.manager.dto.subtask.SubtaskResponseDto;
+import service.task.manager.error.NotFoundException;
 import service.task.manager.mapper.SubtaskMapper;
+import service.task.manager.model.Epic;
+import service.task.manager.model.Subtask;
 import service.task.manager.repository.SubtaskRepository;
 import service.task.manager.service.SubtaskService;
 
@@ -25,7 +29,18 @@ public class SubtaskServiceImpl implements SubtaskService {
      */
     @Override
     public void create(SubtaskRequestCreatedDto dto) {
+        repository.save(mapper.toEntity(dto));
+    }
 
+    /**
+     * @param dto
+     * @return
+     */
+    @Override
+    public SubtaskResponseDto update(SubtaskRequestUpdatedDto dto) {
+        Subtask subtask = mapper.toEntity(dto);
+        subtask = repository.save(subtask);
+        return mapper.toResponseDto(subtask);
     }
 
     /**
@@ -34,7 +49,10 @@ public class SubtaskServiceImpl implements SubtaskService {
      */
     @Override
     public SubtaskResponseDto findById(Long id) {
-        return null;
+        return repository.findById(id).stream()
+                .map(mapper::toResponseDto)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Subtask not found"));
     }
 
     /**
@@ -42,6 +60,16 @@ public class SubtaskServiceImpl implements SubtaskService {
      */
     @Override
     public List<SubtaskResponseDto> findAll() {
-        return List.of();
+        return repository.findAll().stream()
+                .map(mapper::toResponseDto)
+                .toList();
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

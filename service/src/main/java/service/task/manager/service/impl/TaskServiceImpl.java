@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import service.task.manager.dto.task.TaskRequestCreatedDto;
+import service.task.manager.dto.task.TaskRequestUpdatedDto;
 import service.task.manager.dto.task.TaskResponseDto;
+import service.task.manager.error.NotFoundException;
 import service.task.manager.mapper.TaskMapper;
+import service.task.manager.model.Task;
 import service.task.manager.repository.TaskRepository;
 import service.task.manager.service.TaskService;
 
@@ -23,7 +26,18 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public void create(TaskRequestCreatedDto dto) {
-        //repository.save(mapper.toEntity(dto));
+        repository.save(mapper.toEntity(dto));
+    }
+
+    /**
+     * @param dto
+     * @return
+     */
+    @Override
+    public TaskResponseDto update(TaskRequestUpdatedDto dto) {
+        Task task = mapper.toEntity(dto);
+        task = repository.save(task);
+        return mapper.toResponseDto(task);
     }
 
     /**
@@ -32,7 +46,10 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskResponseDto findById(Long id) {
-        return null;
+        return repository.findById(id).stream()
+                .map(mapper::toResponseDto)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Task not found"));
     }
 
     /**
@@ -40,6 +57,16 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskResponseDto> findAll() {
-        return List.of();
+        return repository.findAll().stream()
+                .map(mapper::toResponseDto)
+                .toList();
+    }
+
+    /**
+     * @param id
+     */
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }
