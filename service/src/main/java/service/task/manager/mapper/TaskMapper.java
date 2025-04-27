@@ -1,8 +1,10 @@
 package service.task.manager.mapper;
 
 import org.mapstruct.Mapper;
-import service.task.manager.dto.task.TaskRequestUpdatedDto;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import service.task.manager.dto.task.TaskRequestCreatedDto;
+import service.task.manager.dto.task.TaskRequestUpdatedDto;
 import service.task.manager.dto.task.TaskResponseDto;
 import service.task.manager.model.Task;
 
@@ -17,5 +19,14 @@ public interface TaskMapper {
 
     Task toEntity(TaskRequestUpdatedDto taskRequestUpdatedDto);
 
+    Task toEntity(TaskResponseDto dto);
+
     TaskRequestUpdatedDto toTaskRequestUpdatedDto(Task task);
+
+    // Метод для обновления существующей сущности
+    @Mapping(target = "id", ignore = true) // Не обновляем ID
+    @Mapping(target = "startTime", ignore = true) // Оставляем startTime из базы
+    @Mapping(target = "endTime", ignore = true)
+    // endTime рассчитывается в @PreUpdate
+    void updateTaskFromDto(TaskRequestUpdatedDto dto, @MappingTarget Task task);
 }

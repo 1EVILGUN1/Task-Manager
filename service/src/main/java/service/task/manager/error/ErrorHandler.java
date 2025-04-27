@@ -26,6 +26,12 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflictException(ConflictException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
     record ErrorResponse(String message) {
     }
 

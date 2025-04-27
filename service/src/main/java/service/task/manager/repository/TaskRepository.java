@@ -6,4 +6,5 @@ import service.task.manager.model.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    boolean existsByName(String name);
 }

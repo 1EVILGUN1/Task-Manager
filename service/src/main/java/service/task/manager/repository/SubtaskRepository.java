@@ -6,4 +6,5 @@ import service.task.manager.model.Subtask;
 
 @Repository
 public interface SubtaskRepository extends JpaRepository<Subtask, Long> {
+    boolean existsByName(String name);
 }
