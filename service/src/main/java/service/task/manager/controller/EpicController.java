@@ -60,7 +60,8 @@ public class EpicController {
             @ApiResponse(responseCode = "404", description = "Epic not found")
     })
     public ResponseEntity<EpicResponseDto> findById(
-            @Parameter(description = "ID of the epic to retrieve") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the epic to retrieve") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Fetching epic with ID: {}", id);
         EpicResponseDto epic = service.findById(id);
         return ResponseEntity.ok(epic);
@@ -82,7 +83,8 @@ public class EpicController {
             @ApiResponse(responseCode = "404", description = "Epic not found")
     })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID of the epic to delete") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the epic to delete") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Deleting epic with ID: {}", id);
         service.delete(id);
         return ResponseEntity.noContent().build();

@@ -60,7 +60,8 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<TaskResponseDto> get(
-            @Parameter(description = "ID of the task to retrieve") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the task to retrieve") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Fetching task with ID: {}", id);
         TaskResponseDto task = service.findById(id);
         return ResponseEntity.ok(task);
@@ -82,7 +83,8 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task not found")
     })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID of the task to delete") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the task to delete") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Deleting task with ID: {}", id);
         service.delete(id);
         return ResponseEntity.noContent().build();

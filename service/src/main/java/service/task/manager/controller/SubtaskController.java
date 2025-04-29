@@ -61,7 +61,8 @@ public class SubtaskController {
             @ApiResponse(responseCode = "404", description = "Subtask not found")
     })
     public ResponseEntity<SubtaskResponseDto> findById(
-            @Parameter(description = "ID of the subtask to retrieve") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the subtask to retrieve") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Fetching subtask with ID: {}", id);
         SubtaskResponseDto subtask = service.findById(id);
         return ResponseEntity.ok(subtask);
@@ -83,7 +84,8 @@ public class SubtaskController {
             @ApiResponse(responseCode = "404", description = "Subtask not found")
     })
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID of the subtask to delete") @PathVariable @Positive @NotNull Long id) {
+            @Parameter(description = "ID of the subtask to delete") @PathVariable @Positive(message = "id must be positive")
+            @NotNull(message = "null id") Long id) {
         log.info("Deleting subtask with ID: {}", id);
         service.delete(id);
         return ResponseEntity.noContent().build();
