@@ -13,6 +13,7 @@ import service.task.manager.mapper.TaskMapper;
 import service.task.manager.model.Task;
 import service.task.manager.model.enums.Status;
 import service.task.manager.repository.TaskRepository;
+import service.task.manager.service.HistoryService;
 import service.task.manager.service.TaskService;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
     private final TaskMapper mapper;
+    private final HistoryService history;
 
     /**
      * Creates a new task based on the provided DTO.
@@ -81,6 +83,7 @@ public class TaskServiceImpl implements TaskService {
                     log.warn("Task with ID {} not found", id);
                     return new NotFoundException("Task with ID " + id + " not found");
                 });
+        history.addToHistory(task.type(),task.id());
         log.info("Task with ID {} retrieved successfully", id);
         return task;
     }

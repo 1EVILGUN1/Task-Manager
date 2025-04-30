@@ -14,6 +14,7 @@ import service.task.manager.model.Epic;
 import service.task.manager.model.enums.Status;
 import service.task.manager.repository.EpicRepository;
 import service.task.manager.service.EpicService;
+import service.task.manager.service.HistoryService;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 public class EpicServiceImpl implements EpicService {
     private final EpicRepository repository;
     private final EpicMapper mapper;
+    private final HistoryService history;
 
     /**
      * Creates a new epic based on the provided DTO.
@@ -92,6 +94,7 @@ public class EpicServiceImpl implements EpicService {
                     log.warn("Epic with ID {} not found", id);
                     return new NotFoundException("Epic with ID " + id + " not found");
                 });
+        history.addToHistory(epic.type(), epic.id());
         log.info("Epic with ID {} retrieved successfully", id);
         return epic;
     }

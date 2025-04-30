@@ -17,6 +17,7 @@ import service.task.manager.model.Subtask;
 import service.task.manager.model.enums.Status;
 import service.task.manager.repository.SubtaskRepository;
 import service.task.manager.service.EpicService;
+import service.task.manager.service.HistoryService;
 import service.task.manager.service.SubtaskService;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class SubtaskServiceImpl implements SubtaskService {
     private final EpicService epicService;
     private final SubtaskMapper mapper;
     private final EpicMapper epicMapper;
+    private final HistoryService history;
 
     /**
      * Creates a new subtask based on the provided DTO.
@@ -103,6 +105,7 @@ public class SubtaskServiceImpl implements SubtaskService {
                     log.warn("Subtask with ID {} not found", id);
                     return new NotFoundException("Subtask with ID " + id + " not found");
                 });
+        history.addToHistory(subtask.type(),subtask.id());
         log.info("Subtask with ID {} retrieved successfully", id);
         return subtask;
     }
