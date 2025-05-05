@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CrudOperationsStateConfig">
+    <option name="configPaths">
+      <map>
+        <entry key="dto" value="service.task.manager.dto.subtask.SubtaskResponseDto" />
+        <entry key="repository" value="service.task.manager.repository.SubtaskRepository" />
+        <entry key="serviceProxy" value="service.task.manager.service.impl.SubtaskServiceImpl" />
+      </map>
+    </option>
+  </component>
+  <component name="SpringProjectLocalState">
+    <option name="firstOpen" value="false" />
+  </component>
+</project>

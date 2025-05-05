@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:task-manager
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# Путь к Swagger UI
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  info:
+    title: Task Manager API
+    version: 1.0.0
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
