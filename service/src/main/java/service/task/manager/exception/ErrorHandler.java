@@ -1,4 +1,4 @@
-package service.task.manager.error;
+package service.task.manager.exception;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

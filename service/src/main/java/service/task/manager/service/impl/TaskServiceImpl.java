@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import service.task.manager.dto.task.TaskRequestCreatedDto;
 import service.task.manager.dto.task.TaskRequestUpdatedDto;
 import service.task.manager.dto.task.TaskResponseDto;
-import service.task.manager.error.ConflictException;
-import service.task.manager.error.NotFoundException;
+import service.task.manager.exception.ConflictException;
+import service.task.manager.exception.NotFoundException;
 import service.task.manager.mapper.TaskMapper;
 import service.task.manager.model.Task;
 import service.task.manager.model.enums.Status;
@@ -16,6 +16,7 @@ import service.task.manager.repository.TaskRepository;
 import service.task.manager.service.HistoryService;
 import service.task.manager.service.TaskService;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -115,6 +116,43 @@ public class TaskServiceImpl implements TaskService {
         findById(id); // Проверяет существование
         repository.deleteById(id);
         log.info("Task with ID {} deleted successfully", id);
+    }
+
+    /**
+     * Retrieves all tasks sorted by priority and end time.
+     * <p>
+     * Epics are sorted first by status in the order: IN_PROGRESS, NEW, DONE.
+     * Within each status group, tasks are sorted by end time (earliest first).
+     * </p>
+     *
+     * @return A list of all tasks as DTOs, sorted by priority and end time.
+     */
+    @Override
+    public List<TaskResponseDto> prioritized() {
+        log.info("Fetching all subtasks sorted by priority and end time");
+        List<TaskResponseDto> tasks = repository.findAll()
+                .stream()
+                .map(mapper::toResponseDto)
+                .sorted(Comparator
+                        .comparing(this::getStatusPriority)
+                        .thenComparing(TaskResponseDto::endTime))
+                .toList();
+        log.info("Retrieved {} prioritized subtasks", tasks.size());
+        return tasks;
+    }
+
+    /**
+     * Helper method to assign priority based on status.
+     *
+     * @param dto The task DTO.
+     * @return The priority value (lower means higher priority).
+     */
+    private int getStatusPriority(TaskResponseDto dto) {
+        return switch (dto.status()) {
+            case IN_PROGRESS -> 1;
+            case NEW -> 2;
+            case DONE -> 3;
+        };
     }
 
     /**

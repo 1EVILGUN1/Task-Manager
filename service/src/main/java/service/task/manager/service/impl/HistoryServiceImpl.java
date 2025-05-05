@@ -54,13 +54,13 @@ public class HistoryServiceImpl implements HistoryService {
                 listOps.leftPop(HISTORY_KEY);
             }
         } catch (Exception e) {
-            log.error("Failed to add entry to history: type={}, id={}, error={}", type, id, e.getMessage(), e);
+            log.error("Failed to add entry to history: type={}, id={}, exception={}", type, id, e.getMessage(), e);
         }
     }
 
     /**
      * Retrieves the list of entries from the history of method calls.
-     * If the history is empty or an error occurs while retrieving data, an empty list is returned.
+     * If the history is empty or an exception occurs while retrieving data, an empty list is returned.
      *
      * @return the list of history entries
      */

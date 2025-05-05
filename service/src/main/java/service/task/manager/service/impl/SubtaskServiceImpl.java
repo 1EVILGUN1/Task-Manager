@@ -8,8 +8,8 @@ import service.task.manager.dto.epic.EpicResponseDto;
 import service.task.manager.dto.subtask.SubtaskRequestCreatedDto;
 import service.task.manager.dto.subtask.SubtaskRequestUpdatedDto;
 import service.task.manager.dto.subtask.SubtaskResponseDto;
-import service.task.manager.error.ConflictException;
-import service.task.manager.error.NotFoundException;
+import service.task.manager.exception.ConflictException;
+import service.task.manager.exception.NotFoundException;
 import service.task.manager.mapper.EpicMapper;
 import service.task.manager.mapper.SubtaskMapper;
 import service.task.manager.model.Epic;
@@ -20,6 +20,7 @@ import service.task.manager.service.EpicService;
 import service.task.manager.service.HistoryService;
 import service.task.manager.service.SubtaskService;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -137,6 +138,43 @@ public class SubtaskServiceImpl implements SubtaskService {
         findById(id); // Проверяет существование
         repository.deleteById(id);
         log.info("Subtask with ID {} deleted successfully", id);
+    }
+
+    /**
+     * Retrieves all subtasks sorted by priority and end time.
+     * <p>
+     * Epics are sorted first by status in the order: IN_PROGRESS, NEW, DONE.
+     * Within each status group, subtasks are sorted by end time (earliest first).
+     * </p>
+     *
+     * @return A list of all subtasks as DTOs, sorted by priority and end time.
+     */
+    @Override
+    public List<SubtaskResponseDto> prioritized() {
+        log.info("Fetching all subtasks sorted by priority and end time");
+        List<SubtaskResponseDto> subtask = repository.findAll()
+                .stream()
+                .map(mapper::toResponseDto)
+                .sorted(Comparator
+                        .comparing(this::getStatusPriority)
+                        .thenComparing(SubtaskResponseDto::endTime))
+                .toList();
+        log.info("Retrieved {} prioritized subtasks", subtask.size());
+        return subtask;
+    }
+
+    /**
+     * Helper method to assign priority based on status.
+     *
+     * @param dto The subtask DTO.
+     * @return The priority value (lower means higher priority).
+     */
+    private int getStatusPriority(SubtaskResponseDto dto) {
+        return switch (dto.status()) {
+            case IN_PROGRESS -> 1;
+            case NEW -> 2;
+            case DONE -> 3;
+        };
     }
 
     /**

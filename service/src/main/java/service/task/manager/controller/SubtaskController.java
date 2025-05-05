@@ -90,4 +90,21 @@ public class SubtaskController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/prioritized")
+    @Operation(
+            summary = "Retrieve prioritized subtasks",
+            description = "Returns a list of all subtasks sorted by priority: IN_PROGRESS first, then NEW, and finally DONE. " +
+                          "Within each status, subtasks are sorted by end time (earliest first)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved the list of prioritized subtasks"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server exception")
+    })
+    public ResponseEntity<List<SubtaskResponseDto>> prioritized() {
+        log.info("Fetching prioritized subtasks");
+        return ResponseEntity.ok(service.prioritized());
+    }
 }

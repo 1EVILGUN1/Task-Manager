@@ -16,4 +16,6 @@ public interface EpicService {
     List<EpicResponseDto> findAll();
 
     void delete(Long id);
+
+    List<EpicResponseDto> prioritized();
 }

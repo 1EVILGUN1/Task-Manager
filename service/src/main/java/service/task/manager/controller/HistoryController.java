@@ -43,7 +43,7 @@ public class HistoryController {
             @ApiResponse(responseCode = "200", description = "History retrieved successfully",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = HistoryEntry.class)))),
-            @ApiResponse(responseCode = "500", description = "Internal server error, possibly due to Redis connectivity issues",
+            @ApiResponse(responseCode = "500", description = "Internal server exception, possibly due to Redis connectivity issues",
                     content = @Content)
     })
     public List<HistoryEntry> getHistory() {

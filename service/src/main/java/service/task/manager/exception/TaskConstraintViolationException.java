@@ -1,4 +1,4 @@
-package service.task.manager.error;
+package service.task.manager.exception;
 
 public class TaskConstraintViolationException extends RuntimeException {
     public TaskConstraintViolationException(String message) {

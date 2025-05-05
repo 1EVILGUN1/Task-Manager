@@ -16,4 +16,6 @@ public interface TaskService {
     List<TaskResponseDto> findAll();
 
     void delete(Long id);
+
+    List<TaskResponseDto> prioritized();
 }

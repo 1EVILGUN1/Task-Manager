@@ -89,4 +89,21 @@ public class EpicController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/prioritized")
+    @Operation(
+            summary = "Retrieve prioritized epics",
+            description = "Returns a list of all epics sorted by priority: IN_PROGRESS first, then NEW, and finally DONE. " +
+                          "Within each status, epics are sorted by end time (earliest first)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved the list of prioritized epics"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server exception")
+    })
+    public ResponseEntity<List<EpicResponseDto>> prioritized() {
+        log.info("Fetching prioritized epics");
+        return ResponseEntity.ok(service.prioritized());
+    }
 }

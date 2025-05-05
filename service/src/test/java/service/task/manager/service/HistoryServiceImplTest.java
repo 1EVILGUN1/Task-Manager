@@ -12,14 +12,19 @@ import service.task.manager.model.HistoryEntry;
 import service.task.manager.model.enums.TaskType;
 import service.task.manager.service.impl.HistoryServiceImpl;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HistoryServiceImplTest {
+
+    private static final String HISTORY_KEY = "history";
+    private static final int HISTORY_SIZE = 10;
 
     @Mock
     private RedisTemplate<String, HistoryEntry> redisTemplate;
@@ -31,61 +36,105 @@ class HistoryServiceImplTest {
     private HistoryServiceImpl historyService;
 
     @BeforeEach
-    void setUp() {
-        // Ensure redisTemplate.opsForList() returns the mocked listOps
-        when(redisTemplate.opsForList()).thenReturn(listOps);
+    void setUp() throws NoSuchFieldException, IllegalAccessException {
+        // Use reflection to inject listOps into historyService
+        Field listOpsField = HistoryServiceImpl.class.getDeclaredField("listOps");
+        listOpsField.setAccessible(true);
+        listOpsField.set(historyService, listOps);
     }
 
     @Test
-    void addToHistory_WithinLimit_AddsEntry() {
-        // Mock the size of the list and the range result
-        when(listOps.size("history")).thenReturn(1L);
-        when(listOps.range("history", 0, -1)).thenReturn(List.of(new HistoryEntry(TaskType.EPIC, 1L)));
+    void addToHistory_ShouldAddEntrySuccessfully() {
+        // Arrange
+        TaskType taskType = TaskType.TASK;
+        Long id = 1L;
+        when(listOps.rightPush(eq(HISTORY_KEY), any(HistoryEntry.class))).thenReturn(1L);
+        when(listOps.size(HISTORY_KEY)).thenReturn(1L);
 
-        // Call the method under test
-        historyService.addToHistory(TaskType.EPIC, 1L);
-        List<HistoryEntry> history = historyService.getHistory();
+        // Act
+        historyService.addToHistory(taskType, id);
 
-        // Verify the result
-        assertEquals(1, history.size());
-        assertEquals(TaskType.EPIC, history.get(0).getType());
-        assertEquals(1L, history.get(0).getId());
-
-        // Verify interactions with listOps
-        verify(listOps, times(1)).rightPush("history", new HistoryEntry(TaskType.EPIC, 1L));
+        // Assert
+        verify(listOps, times(1)).rightPush(eq(HISTORY_KEY), any(HistoryEntry.class));
+        verify(listOps, never()).leftPop(HISTORY_KEY);
     }
 
     @Test
-    void addToHistory_ExceedsLimit_RemovesOldest() {
-        // Create a list to simulate the history entries
-        List<HistoryEntry> historyEntries = new ArrayList<>();
+    void addToHistory_ShouldRemoveOldestEntryWhenSizeExceedsLimit() {
+        // Arrange
+        TaskType taskType = TaskType.EPIC;
+        Long id = 2L;
+        when(listOps.rightPush(eq(HISTORY_KEY), any(HistoryEntry.class))).thenReturn(11L);
+        when(listOps.size(HISTORY_KEY)).thenReturn(11L);
+        when(listOps.leftPop(HISTORY_KEY)).thenReturn(new HistoryEntry(TaskType.TASK, 1L));
 
-        // Simulate adding 11 entries
-        for (long i = 1; i <= 11; i++) {
-            // Mock the size of the list to increase with each addition
-            when(listOps.size("history")).thenReturn(i);
-            historyService.addToHistory(TaskType.TASK, i);
-            historyEntries.add(new HistoryEntry(TaskType.TASK, i));
+        // Act
+        historyService.addToHistory(taskType, id);
 
-            // If size exceeds MAX_HISTORY_SIZE (10), simulate leftPop
-            if (i > 10) {
-                historyEntries.remove(0); // Remove the oldest entry
-            }
-        }
+        // Assert
+        verify(listOps, times(1)).rightPush(eq(HISTORY_KEY), any(HistoryEntry.class));
+        verify(listOps, times(1)).leftPop(HISTORY_KEY);
+    }
 
-        // Mock the final state of the history after trimming
-        when(listOps.range("history", 0, -1)).thenReturn(historyEntries);
+    @Test
+    void addToHistory_ShouldHandleExceptionGracefully() {
+        // Arrange
+        TaskType taskType = TaskType.SUBTASK;
+        Long id = 3L;
+        when(listOps.rightPush(eq(HISTORY_KEY), any(HistoryEntry.class)))
+                .thenThrow(new RuntimeException("Redis exception"));
 
-        // Call getHistory to retrieve the result
-        List<HistoryEntry> history = historyService.getHistory();
+        // Act
+        historyService.addToHistory(taskType, id);
 
-        // Verify the result
-        assertEquals(10, history.size());
-        assertEquals(2L, history.get(0).getId()); // First entry (id=1) should be removed
-        assertEquals(11L, history.get(9).getId());
+        // Assert
+        verify(listOps, times(1)).rightPush(eq(HISTORY_KEY), any(HistoryEntry.class));
+        verify(listOps, never()).size(HISTORY_KEY);
+        verify(listOps, never()).leftPop(HISTORY_KEY);
+    }
 
-        // Verify interactions with listOps
-        verify(listOps, times(11)).rightPush(eq("history"), any(HistoryEntry.class));
-        verify(listOps, times(1)).leftPop("history"); // Should trim once after exceeding limit
+    @Test
+    void getHistory_ShouldReturnHistoryEntries() {
+        // Arrange
+        List<HistoryEntry> expectedHistory = List.of(
+                new HistoryEntry(TaskType.TASK, 1L),
+                new HistoryEntry(TaskType.EPIC, 2L)
+        );
+        when(listOps.range(HISTORY_KEY, 0, -1)).thenReturn(expectedHistory);
+
+        // Act
+        List<HistoryEntry> actualHistory = historyService.getHistory();
+
+        // Assert
+        assertEquals(expectedHistory, actualHistory);
+        verify(listOps, times(1)).range(HISTORY_KEY, 0, -1);
+    }
+
+    @Test
+    void getHistory_ShouldReturnEmptyListWhenHistoryIsNull() {
+        // Arrange
+        when(listOps.range(HISTORY_KEY, 0, -1)).thenReturn(null);
+
+        // Act
+        List<HistoryEntry> actualHistory = historyService.getHistory();
+
+        // Assert
+        assertNotNull(actualHistory);
+        assertTrue(actualHistory.isEmpty());
+        verify(listOps, times(1)).range(HISTORY_KEY, 0, -1);
+    }
+
+    @Test
+    void getHistory_ShouldReturnEmptyListOnException() {
+        // Arrange
+        when(listOps.range(HISTORY_KEY, 0, -1)).thenThrow(new RuntimeException("Redis exception"));
+
+        // Act
+        List<HistoryEntry> actualHistory = historyService.getHistory();
+
+        // Assert
+        assertNotNull(actualHistory);
+        assertTrue(actualHistory.isEmpty());
+        verify(listOps, times(1)).range(HISTORY_KEY, 0, -1);
     }
 }

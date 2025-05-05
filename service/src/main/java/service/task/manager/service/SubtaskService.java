@@ -16,4 +16,6 @@ public interface SubtaskService {
     List<SubtaskResponseDto> findAll();
 
     void delete(Long id);
+
+    List<SubtaskResponseDto> prioritized();
 }

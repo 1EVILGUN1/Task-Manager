@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import service.task.manager.dto.epic.EpicRequestCreatedDto;
 import service.task.manager.dto.epic.EpicRequestUpdatedDto;
 import service.task.manager.dto.epic.EpicResponseDto;
-import service.task.manager.error.ConflictException;
-import service.task.manager.error.NotFoundException;
+import service.task.manager.exception.ConflictException;
+import service.task.manager.exception.NotFoundException;
 import service.task.manager.mapper.EpicMapper;
 import service.task.manager.model.Epic;
 import service.task.manager.model.enums.Status;
@@ -16,6 +16,7 @@ import service.task.manager.repository.EpicRepository;
 import service.task.manager.service.EpicService;
 import service.task.manager.service.HistoryService;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -129,6 +130,43 @@ public class EpicServiceImpl implements EpicService {
         log.info("Attempting to delete epic with ID: {}", id);
         repository.deleteById(id);
         log.info("Epic with ID {} deleted successfully", id);
+    }
+
+    /**
+     * Retrieves all epics sorted by priority and end time.
+     * <p>
+     * Epics are sorted first by status in the order: IN_PROGRESS, NEW, DONE.
+     * Within each status group, epics are sorted by end time (earliest first).
+     * </p>
+     *
+     * @return A list of all epics as DTOs, sorted by priority and end time.
+     */
+    @Override
+    public List<EpicResponseDto> prioritized() {
+        log.info("Fetching all epics sorted by priority and end time");
+        List<EpicResponseDto> epics = repository.findAll()
+                .stream()
+                .map(mapper::toResponseDto)
+                .sorted(Comparator
+                        .comparing(this::getStatusPriority)
+                        .thenComparing(EpicResponseDto::endTime))
+                .toList();
+        log.info("Retrieved {} prioritized epics", epics.size());
+        return epics;
+    }
+
+    /**
+     * Helper method to assign priority based on status.
+     *
+     * @param dto The epic DTO.
+     * @return The priority value (lower means higher priority).
+     */
+    private int getStatusPriority(EpicResponseDto dto) {
+        return switch (dto.status()) {
+            case IN_PROGRESS -> 1;
+            case NEW -> 2;
+            case DONE -> 3;
+        };
     }
 
     /**
