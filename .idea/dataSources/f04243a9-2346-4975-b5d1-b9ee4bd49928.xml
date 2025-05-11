@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="testdb">
-  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.52">
+  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.53">
     <root id="1">
       <ServerVersion>2.2.220</ServerVersion>
     </root>
