@@ -206,6 +206,9 @@ mvn test
 - [Docker](https://docs.docker.com) — Руководство по Docker.
 - [Docker Compose](https://docs.docker.com/compose/) — Документация по Docker Compose.
 
+## Лицензия
+Этот проект лицензирован под [Apache License 2.0](LICENSE).
+
 ---
 
 **java-task-manager** — это не просто менеджер задач, это шаг к освоению современных технологий разработки!
